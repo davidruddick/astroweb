@@ -5,6 +5,7 @@ def download_fits(mission, id, sector=None):
 
     # create wget commands based on mission and id.
     # fits data is available from archive.stsci.edu.
+    #test
 
     fits_dir = os.path.join(os.getcwd(), "Astronet", mission, "Astronet\\fits\\" + id) # where the fits files will be downloaded to
     

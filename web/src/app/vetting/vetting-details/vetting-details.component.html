@@ -1,0 +1,80 @@
+<form [formGroup]="details">
+
+  <div class="transit_properties">
+
+    <mat-form-field appearance="standard" color="accent">
+      <mat-label>Mission</mat-label>
+      <mat-select formControlName="mission">
+        <mat-option value="kepler">Kepler Primary</mat-option>
+        <mat-option value="tess">TESS Primary</mat-option>
+      </mat-select>
+      <mat-error *ngIf="details.get('mission')?.hasError('required')">
+        Please select a mission
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard" color="accent">
+      <mat-label>ID</mat-label>
+      <input matInput formControlName="id" autocomplete="off" required value="155315739">
+      <span matPrefix>{{details.get('prefix')?.value}}&nbsp;</span>
+      <mat-error *ngIf="details.get('id')?.hasError('required')">
+        This field is required
+      </mat-error>
+      <mat-error *ngIf="details.get('id')?.hasError('invalidID')">
+        ID must be a 9-digit positive number
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard" color="accent">
+      <mat-label>Period (days)</mat-label>
+      <input matInput formControlName="period" autocomplete="off" required value="12.3249">
+      <mat-error *ngIf="details.get('period')?.hasError('required')">
+        This field is required
+      </mat-error>
+      <mat-error *ngIf="details.get('period')?.hasError('invalidNumber')">
+        Period must be numeric and higher than 0
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard" color="accent">
+      <mat-label>Duration (days)</mat-label>
+      <input matInput formControlName="duration" autocomplete="off" required value="0.5">
+      <mat-error *ngIf="details.get('duration')?.hasError('required')">
+        This field is required
+      </mat-error>
+      <mat-error *ngIf="details.get('duration')?.hasError('invalidNumber')">
+        Duration must be numeric and higher than 0
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard" color="accent">
+      <mat-label>Transit Start Time (days)</mat-label>
+      <input matInput formControlName="start" autocomplete="off" required value="3.6">
+      <mat-error *ngIf="details.get('start')?.hasError('required')">
+        This field is required
+      </mat-error>
+      <mat-error *ngIf="details.get('start')?.hasError('invalidNumber')">
+        Start time must be numeric and higher than 0
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="details.get('mission')?.value == 'tess'" appearance="standard" color="accent">
+      <mat-label>Sector</mat-label>
+      <input matInput formControlName="sector" autocomplete="off" value="2">
+      <mat-error *ngIf="details.get('sector')?.hasError('required')">
+        This field is required
+      </mat-error>
+      <mat-error *ngIf="details.get('sector')?.hasError('invalidPositiveInt')">
+        Sector must be a postive integer
+      </mat-error>
+    </mat-form-field>
+
+  </div>
+
+  <div class="button-row">
+    <br>
+    <br>
+    <button class="button" mat-raised-button color="primary" [disabled]="!details.valid" (click)="onClick()">Validate with Astronet</button>
+  </div>
+
+</form>

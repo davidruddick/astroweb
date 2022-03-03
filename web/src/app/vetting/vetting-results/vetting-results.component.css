@@ -1,0 +1,16 @@
+.results{
+  margin: 1rem;
+}
+
+.mat-card-header{
+  text-align: center;
+}
+
+.mat-card-title{
+  text-align: center;
+  padding: 1rem;
+}
+
+.body{
+  color: rgb(43, 156, 58);
+}

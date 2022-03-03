@@ -1,0 +1,17 @@
+<mat-card class="results">
+
+  <mat-card-subtitle *ngIf="!prediction">
+    No results to display
+  </mat-card-subtitle>
+
+  <img *ngIf="image_path" mat-card-image src="{{image_path}}" alt="Light curve">
+
+  <mat-card-content *ngIf="prediction">
+    <p>Prediction = {{prediction}}</p>
+  </mat-card-content>
+
+  <mat-card-footer *ngIf="vetting">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
+
+</mat-card>
