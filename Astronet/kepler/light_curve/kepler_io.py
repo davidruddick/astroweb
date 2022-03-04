@@ -132,8 +132,6 @@ def kepler_filenames(base_dir,
   quarters = sorted(quarters)  # Sort quarters chronologically.
 
   filenames = []
-  #base_dir = os.path.join(base_dir, kep_id[0:4], kep_id)
-  base_dir = os.path.join(base_dir, kep_id)
   for quarter in quarters:
     for quarter_prefix in quarter_prefixes[quarter]:
       if injected_group:
@@ -146,6 +144,7 @@ def kepler_filenames(base_dir,
       # Not all stars have data for all quarters.
       if not check_existence or gfile.Exists(filename):
         filenames.append(filename)
+      print(filename)
 
   return filenames
 

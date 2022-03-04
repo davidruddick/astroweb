@@ -16,8 +16,10 @@ def get_prediction():
 
     command, img = build_command(data["mission"], data["id"], data["period"], data["duration"], data["t0"], fits_dir)
     prediction = run_command(command)
+    print(command)
     tidy(fits_dir)
     return jsonify({"prediction" : prediction, "image" : img})
+
 
 if __name__ == '__main__':
      app.run(port=4201)

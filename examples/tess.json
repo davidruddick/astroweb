@@ -2,7 +2,7 @@
 	"mission" : "tess",
 	"id" : "155315739",
 	"period" : 12.3249,
-	"t0" : 3.6,
 	"duration" : 0.5,
+	"t0" : 3.6,
 	"sector" : "2"
 }
