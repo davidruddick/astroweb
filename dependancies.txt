@@ -1,0 +1,19 @@
+Python 3.7
+tensorflow 1.15
+tensorboard 1.15.0
+tensorflow-estimator 1.15.1
+tensorflow-gpu 1.15.0
+tensorflow-probability 0.8.0
+pandas
+numpy
+astropy
+pydl
+statsmodels
+CUDA 10.0
+Cudnn 9.2
+flask
+flask-jsonpify
+flask-sqlalchemy
+flask-restful
+flask-cors
+wget
