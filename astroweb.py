@@ -8,7 +8,7 @@ def download_fits(mission, id, sector=None):
 
     fits_dir = os.path.join(os.getcwd(), "fits", id) # where the fits files will be downloaded to
     os.makedirs(fits_dir, exist_ok = True)
-    os.makedirs(os.path.join(os.getcwd(), "images"))
+    os.makedirs(os.path.join(os.getcwd(), "images"), exist_ok = True)
     
     if mission == "kepler":
         url = "http://archive.stsci.edu/pub/kepler/lightcurves/" + id[0:4] + "/" + id
