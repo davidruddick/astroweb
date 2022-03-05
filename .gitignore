@@ -41,6 +41,16 @@ build/Release
 node_modules/
 jspm_packages/
 
+# Angular cache
+.angular/cache
+
+# Python bitecode
+**/__pycache__
+
+# Lightcurve fits and images
+images/
+fits/
+
 # TypeScript v1 declaration files
 typings/
 

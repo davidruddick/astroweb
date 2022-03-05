@@ -5,9 +5,10 @@ def download_fits(mission, id, sector=None):
 
     # create wget commands based on mission and id.
     # fits data is available from archive.stsci.edu.
-    #test
 
-    fits_dir = os.path.join(os.getcwd(), "Astronet", mission, "Astronet\\fits\\" + id) # where the fits files will be downloaded to
+    fits_dir = os.path.join(os.getcwd(), "fits", id) # where the fits files will be downloaded to
+    os.makedirs(fits_dir, exist_ok = True)
+    os.makedirs(os.path.join(os.getcwd(), "images"))
     
     if mission == "kepler":
         url = "http://archive.stsci.edu/pub/kepler/lightcurves/" + id[0:4] + "/" + id
@@ -25,7 +26,6 @@ def download_fits(mission, id, sector=None):
                     subprocess.run(command, shell=True, check=True)
 
     if mission == "tess":
-        os.makedirs(fits_dir, exist_ok = True)
         url = "https://archive.stsci.edu/missions/tess/download_scripts/sector/tesscurl_sector_" + sector + "_lc.sh"
         command = "wget -O " + os.path.join(fits_dir, "index.sh") + " " + url
         subprocess.run(command, shell=True, check=True)
