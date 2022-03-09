@@ -9,12 +9,24 @@ export function isValidID(control: AbstractControl){
   return null
 }
 
+export function isZeroOrPositiveNumber(control: AbstractControl){
+  let value: string = control.value
+  if(value.length == 0){
+    return null
+  }
+  if(isNaN(parseFloat(value)) || parseFloat(value)<0 ){
+    return { invalidNumber: true }
+  }
+  return null
+}
+
+
 export function isPositiveNumber(control: AbstractControl){
   let value: string = control.value
-  if(value == ""){
-    value = "1"
+  if(value.length == 0){
+    return null
   }
-  if(isNaN(parseInt(value)) || parseInt(value)<=0 ){
+  if(isNaN(parseFloat(value)) || parseFloat(value)<=0 ){
     return { invalidNumber: true }
   }
   return null
@@ -23,7 +35,7 @@ export function isPositiveNumber(control: AbstractControl){
 export function isPositiveInt(control: AbstractControl){
   let value: string = control.value
   if(isNaN(parseInt(value)) || parseInt(value)<1 || parseFloat(value) % 1 != 0 ){
-    return { invalidPositiveInt: true }
+    return { invalidNumber: true }
   }
   return null
 }

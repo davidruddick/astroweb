@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ICandidate } from '../candidate.model';
-import { isPositiveInt, isPositiveNumber, isValidID } from '../custom-validators';
+import { isPositiveInt, isPositiveNumber, isValidID, isZeroOrPositiveNumber } from '../custom-validators';
 import { VettingService } from '../vetting.service';
 
 
@@ -18,9 +18,11 @@ export class VettingDetailsComponent implements OnInit {
     id: new FormControl("", [Validators.required, isValidID]),
     period: new FormControl("", [Validators.required, isPositiveNumber]),
     duration: new FormControl("", [Validators.required, isPositiveNumber]),
-    t0: new FormControl("", [isPositiveNumber]),
+    t0: new FormControl("", [isZeroOrPositiveNumber]),
     sector: new FormControl("")
   })
+
+  error: string | null = null;
 
   constructor(private vet: VettingService) {
   }
@@ -43,6 +45,8 @@ export class VettingDetailsComponent implements OnInit {
 
   onClick(){
 
+    this.error = null;
+
     let candidate: ICandidate = {
       mission: this.details.value.mission,
       id: this.details.value.id,
@@ -60,11 +64,9 @@ export class VettingDetailsComponent implements OnInit {
     )
 
     this.vet.makeNewPrediction(candidate)
-
-    //this.vet.getPredictionFromAstronet(candidate).subscribe(result=>{
-    //  console.log(result)
-    //})
-
+    this.vet.newError.subscribe(error=>{
+      this.error = error
+    })
 
   }
 

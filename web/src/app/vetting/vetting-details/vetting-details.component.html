@@ -51,7 +51,7 @@
       <mat-label>Epoch Phase (days)</mat-label>
       <input matInput formControlName="t0" autocomplete="off">
       <mat-error *ngIf="details.get('t0')?.hasError('invalidNumber')">
-        Epoch phase must be a positive number
+        Epoch phase must be zero or a positive number
       </mat-error>
     </mat-form-field>
 
@@ -61,7 +61,7 @@
       <mat-error *ngIf="details.get('sector')?.hasError('required')">
         This field is required
       </mat-error>
-      <mat-error *ngIf="details.get('sector')?.hasError('invalidPositiveInt')">
+      <mat-error *ngIf="details.get('sector')?.hasError('invalidNumber')">
         Sector must be a postive integer
       </mat-error>
     </mat-form-field>
@@ -72,6 +72,7 @@
     <br>
     <br>
     <button class="button" mat-raised-button color="primary" [disabled]="!details.valid" (click)="onClick()">Validate with Astronet</button>
+    <mat-error class="error" *ngIf="error">{{error}}</mat-error>
   </div>
 
 </form>

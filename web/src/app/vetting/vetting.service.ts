@@ -16,11 +16,16 @@ export class VettingService{
   }
 
   newPrediction = new Subject<ICandidate>()
+  newError = new Subject<string>()
 
   constructor(private http: HttpClient) { }
 
   makeNewPrediction(candidate: ICandidate){
     this.newPrediction.next(candidate)
+  }
+
+  getError(error: string){
+    this.newError.next(error)
   }
 
   getPredictionFromAstronet(candidate: ICandidate){
@@ -44,11 +49,12 @@ export class VettingService{
         return this.result
       }),
       catchError(error=>{
-        console.log(error.status, error.error)
-        return throwError("Oops. Something went wrong...")
+        this.getError(error.error)
+        return throwError(() => new Error(error.error))
       })
     )
   }
+
 
 
 }

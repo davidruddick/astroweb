@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { catchError } from 'rxjs';
 import { VettingService } from '../vetting.service';
 
 @Component({
@@ -9,9 +10,10 @@ import { VettingService } from '../vetting.service';
 export class VettingResultsComponent implements OnInit {
 
   vetting = false;
-  id: string | null | undefined;
-  image_path: string | null | undefined;
-  prediction: string | null | undefined;
+  id: string | null = null;
+  image_path: string | null = null;
+  prediction: string | null = null;
+  error: string | null = null;
 
   constructor(private vet: VettingService) { }
 
@@ -25,7 +27,7 @@ export class VettingResultsComponent implements OnInit {
         this.vetting = false
       },
       error=>{
-        console.log(error)
+        //console.log(error)
         this.vetting = false
       })
     })

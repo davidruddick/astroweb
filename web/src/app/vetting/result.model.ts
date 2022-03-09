@@ -1,6 +1,6 @@
 export interface IResult{
 
-  id?: string | null,
+  id: string | null,
   prediction: string | null,
   image: string | null
 
