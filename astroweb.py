@@ -1,4 +1,4 @@
-import os, subprocess, shutil, csv
+import os, time, math, subprocess, shutil, csv
 
 
 def download_fits(mission, id, sector=None):
@@ -7,6 +7,7 @@ def download_fits(mission, id, sector=None):
     # fits data is available from archive.stsci.edu.
 
     fits_dir = os.path.join(os.getcwd(), "fits", id) # where the fits files will be downloaded to
+    img_dir = os.path.join(os.getcwd(), "web\\src\\assets\\download\\" + str(math.floor(time.time())) + ".png")
     os.makedirs(fits_dir, exist_ok = True)
     os.makedirs(os.path.join(os.getcwd(), "images"), exist_ok = True)
     
@@ -14,6 +15,7 @@ def download_fits(mission, id, sector=None):
         url = "http://archive.stsci.edu/pub/kepler/lightcurves/" + id[0:4] + "/" + id
         command = "wget -nH --cut-dirs=6 -r -l0 -c -N -np -erobots=off -R 'index*' -A _llc.fits -P " + fits_dir + " " + url + "/"
         subprocess.run(command, shell=True, check=True)
+
 
     if mission == "k2":
         with open(os.path.join(os.getcwd(), "Astronet\\k2\\manifest\\manifest.csv")) as manifest:
@@ -41,14 +43,13 @@ def download_fits(mission, id, sector=None):
                 subprocess.run(new_command, shell=True, check=True)
                 index.close()
 
-    return fits_dir
+    return fits_dir, img_dir
 
 
-def build_command(mission, id, period, duration, t0, fits_dir):
+def build_command(mission, id, period, duration, t0, fits_dir, img_dir):
     telescope = mission
     if telescope == "k2":
         telescope = "kepler"
-    img = os.path.join(os.getcwd(), "images\\" + id + ".png")
     args = {
         "model" : "AstroCNNModel",
         "config_name" : "local_global",
@@ -58,10 +59,10 @@ def build_command(mission, id, period, duration, t0, fits_dir):
         "period" : period,
         "duration" : duration,
         "t0" : t0,
-        "output_image_file" : img
+        "output_image_file" : img_dir
     }
 
-    return "py -3.7 " + os.path.join(os.getcwd(), "Astronet", mission, "Astronet\\predict.py") + " " + " ".join('--{}={}'.format(k,v) for k,v in args.items()), img
+    return "py -3.7 " + os.path.join(os.getcwd(), "Astronet", mission, "Astronet\\predict.py") + " " + " ".join('--{}={}'.format(k,v) for k,v in args.items()), img_dir.split("\\")[-1]
             
 
 def run_command(command):

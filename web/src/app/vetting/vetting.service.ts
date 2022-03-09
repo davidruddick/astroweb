@@ -12,7 +12,7 @@ export class VettingService{
   result: IResult = {
     id: null,
     prediction: null,
-    image_path: null
+    image: null
   }
 
   newPrediction = new Subject<ICandidate>()
@@ -38,11 +38,13 @@ export class VettingService{
     }
     ).pipe(
       map(response=>{
+        console.log(response)
         this.result = response
         this.result.id = candidate.id
         return this.result
       }),
-      catchError(()=>{
+      catchError(error=>{
+        console.log(error.status, error.error)
         return throwError("Oops. Something went wrong...")
       })
     )

@@ -9,9 +9,12 @@ export function isValidID(control: AbstractControl){
   return null
 }
 
-export function isNumeric(control: AbstractControl){
+export function isPositiveNumber(control: AbstractControl){
   let value: string = control.value
-  if(isNaN(parseInt(value)) || parseInt(value)<0 ){
+  if(value == ""){
+    value = "1"
+  }
+  if(isNaN(parseInt(value)) || parseInt(value)<=0 ){
     return { invalidNumber: true }
   }
   return null

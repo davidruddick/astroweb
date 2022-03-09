@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ICandidate } from '../candidate.model';
-import { isNumeric, isPositiveInt, isValidID } from '../custom-validators';
+import { isPositiveInt, isPositiveNumber, isValidID } from '../custom-validators';
 import { VettingService } from '../vetting.service';
 
 
@@ -17,9 +16,9 @@ export class VettingDetailsComponent implements OnInit {
     mission: new FormControl("", [Validators.required]),
     prefix: new FormControl(""),
     id: new FormControl("", [Validators.required, isValidID]),
-    period: new FormControl("", [Validators.required, isNumeric]),
-    duration: new FormControl("", [Validators.required, isNumeric]),
-    start: new FormControl("", [Validators.required, isNumeric]),
+    period: new FormControl("", [Validators.required, isPositiveNumber]),
+    duration: new FormControl("", [Validators.required, isPositiveNumber]),
+    t0: new FormControl("", [isPositiveNumber]),
     sector: new FormControl("")
   })
 
@@ -38,6 +37,7 @@ export class VettingDetailsComponent implements OnInit {
           this.details.get('sector')?.setValidators([Validators.required, isPositiveInt])
           break;
       }
+      this.details.get('sector')?.updateValueAndValidity()
     })
   }
 
@@ -48,7 +48,7 @@ export class VettingDetailsComponent implements OnInit {
       id: this.details.value.id,
       period: this.details.value.period,
       duration: this.details.value.duration,
-      t0: this.details.value.start,
+      t0: this.details.value.t0 ? this.details.value.t0 : "0",
     }
 
     if(this.details.get('mission')?.value == "tess"){

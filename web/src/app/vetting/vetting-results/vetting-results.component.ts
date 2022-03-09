@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { catchError } from 'rxjs';
 import { VettingService } from '../vetting.service';
 
 @Component({
@@ -22,7 +21,7 @@ export class VettingResultsComponent implements OnInit {
       this.vet.getPredictionFromAstronet(candidate).subscribe(result=>{
         this.id = result.id
         this.prediction = result.prediction
-        this.image_path = result.image_path
+        this.image_path = "../assets/download/" + result.image
         this.vetting = false
       },
       error=>{

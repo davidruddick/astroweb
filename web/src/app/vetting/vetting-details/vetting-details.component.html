@@ -15,7 +15,7 @@
 
     <mat-form-field appearance="standard" color="accent">
       <mat-label>ID</mat-label>
-      <input matInput formControlName="id" autocomplete="off" required value="155315739">
+      <input matInput formControlName="id" autocomplete="off" required>
       <span matPrefix>{{details.get('prefix')?.value}}&nbsp;</span>
       <mat-error *ngIf="details.get('id')?.hasError('required')">
         This field is required
@@ -27,40 +27,37 @@
 
     <mat-form-field appearance="standard" color="accent">
       <mat-label>Period (days)</mat-label>
-      <input matInput formControlName="period" autocomplete="off" required value="12.3249">
+      <input matInput formControlName="period" autocomplete="off" required>
       <mat-error *ngIf="details.get('period')?.hasError('required')">
         This field is required
       </mat-error>
       <mat-error *ngIf="details.get('period')?.hasError('invalidNumber')">
-        Period must be numeric and higher than 0
+        Period must be a positive number
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="standard" color="accent">
       <mat-label>Duration (days)</mat-label>
-      <input matInput formControlName="duration" autocomplete="off" required value="0.5">
+      <input matInput formControlName="duration" autocomplete="off" required>
       <mat-error *ngIf="details.get('duration')?.hasError('required')">
         This field is required
       </mat-error>
       <mat-error *ngIf="details.get('duration')?.hasError('invalidNumber')">
-        Duration must be numeric and higher than 0
+        Duration must be a positive number
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="standard" color="accent">
-      <mat-label>Transit Start Time (days)</mat-label>
-      <input matInput formControlName="start" autocomplete="off" required value="3.6">
-      <mat-error *ngIf="details.get('start')?.hasError('required')">
-        This field is required
-      </mat-error>
-      <mat-error *ngIf="details.get('start')?.hasError('invalidNumber')">
-        Start time must be numeric and higher than 0
+      <mat-label>Epoch Phase (days)</mat-label>
+      <input matInput formControlName="t0" autocomplete="off">
+      <mat-error *ngIf="details.get('t0')?.hasError('invalidNumber')">
+        Epoch phase must be a positive number
       </mat-error>
     </mat-form-field>
 
     <mat-form-field *ngIf="details.get('mission')?.value == 'tess'" appearance="standard" color="accent">
       <mat-label>Sector</mat-label>
-      <input matInput formControlName="sector" autocomplete="off" value="2">
+      <input matInput formControlName="sector" autocomplete="off">
       <mat-error *ngIf="details.get('sector')?.hasError('required')">
         This field is required
       </mat-error>
