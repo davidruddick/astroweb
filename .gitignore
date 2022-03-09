@@ -42,7 +42,7 @@ node_modules/
 jspm_packages/
 
 # Angular cache
-.angular/cache
+web/.angular/cache
 
 # Python bitecode
 **/__pycache__
