@@ -1,0 +1,1 @@
+http://simbad.u-strasbg.fr/simbad/sim-tap/sync?request=doQuery&lang=adql&format=text&query=SELECT main_id AS "Main identifier" FROM basic JOIN ident ON oidref = oid WHERE id = 'kic011442793'
