@@ -26,10 +26,30 @@
   padding: 1rem;
   text-align: center;
 }
+
+
  .logo{
    max-width: 100%;
+   cursor: pointer;
+   transition: 0.5;
  }
 
- .active-link{
+.logo:hover {opacity: 0.8;}
+
+.popup_image_background{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.popup_image{
+  display: block; /* Hidden by default */
+  margin: auto;
+  width: 100%;
+  max-width: 720px;
+}
+
+.active-link{
    background: #494949;
  }

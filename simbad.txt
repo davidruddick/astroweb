@@ -1,0 +1,6 @@
+SELECT star.main_id AS star_name, planet.main_id AS planet_name, i1.id AS alias
+FROM basic AS planet
+JOIN h_link ON child = planet.oid
+JOIN ident AS i1 ON i1.oidref = parent
+JOIN ident AS i2 ON i2.oidref = i1.oidref
+JOIN basic AS star ON star.oid = i2.oidref WHERE i2.id = 'KIC011442793'

@@ -18,6 +18,7 @@ export class VettingService{
   newPrediction = new Subject<ICandidate>()
   newError = new Subject<string>()
 
+
   constructor(private http: HttpClient) { }
 
   makeNewPrediction(candidate: ICandidate){
@@ -26,6 +27,21 @@ export class VettingService{
 
   getError(error: string){
     this.newError.next(error)
+  }
+
+  get_unique(values: string[]){
+    let star_name: string = values[0][0]
+    let star_aliases: string[] = []
+    let known_exoplanets: string[] = []
+    for(let i = 0; i<values.length; i++){
+      if(!star_aliases.includes(values[i][2])){
+        star_aliases.push(values[i][2])
+      }
+      if(!known_exoplanets.includes(values[i][1])){
+        known_exoplanets.push(values[i][1])
+      }
+    }
+    console.log(star_name, star_aliases, known_exoplanets)
   }
 
   getPredictionFromAstronet(candidate: ICandidate){
@@ -48,30 +64,19 @@ export class VettingService{
         request: "doQuery",
         lang: "adql",
         format: "json",
-        query: "SELECT main_id AS \"Main identifier\" FROM basic JOIN ident ON oidref = oid WHERE id = '" + full_id + "'",
-      }
-    }).pipe(
-      map(response=>{
-        return response["data"][0][0]
-      })
-    ).subscribe(result=>{
-      console.log(result)
-    })
-
-    this.http.get<any>('http://simbad.u-strasbg.fr/simbad/sim-tap/sync',
-    {
-      params: {
-        request: "doQuery",
-        lang: "adql",
-        format: "json",
-        query: "SELECT id2.id FROM ident AS id1 JOIN ident AS id2 USING(oidref) WHERE id1.id = '" + full_id + "'",
+        query: `SELECT star.main_id AS star_name, planet.main_id AS planet_name, i1.id AS alias
+        FROM basic AS planet
+        JOIN h_link ON child = planet.oid
+        JOIN ident AS i1 ON i1.oidref = parent
+        JOIN ident AS i2 ON i2.oidref = i1.oidref
+        JOIN basic AS star ON star.oid = i2.oidref WHERE i2.id = 'KIC011442793'`,
       }
     }).pipe(
       map(response=>{
         return response["data"]
       })
     ).subscribe(result=>{
-      console.log(result)
+      this.get_unique(result)
     })
 
 
