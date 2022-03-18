@@ -48,7 +48,7 @@ web/.angular/cache
 **/__pycache__
 
 # Lightcurve fits and images
-images/
+web/src/assets/download/
 fits/
 
 # TypeScript v1 declaration files
