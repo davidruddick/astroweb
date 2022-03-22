@@ -20,14 +20,14 @@ export class VettingResultsComponent implements OnInit {
   ngOnInit(): void {
     this.vet.newPrediction.subscribe(candidate=>{
       this.vetting = true;
-      this.vet.getPredictionFromAstronet(candidate).subscribe(result=>{
-        this.id = result.id
+      this.vet.getResult(candidate).subscribe(result=>{
+        console.log(result)
+        this.id = result.star_id
         this.prediction = result.prediction
         this.image_path = "../assets/download/" + result.image
         this.vetting = false
       },
       error=>{
-        //console.log(error)
         this.vetting = false
       })
     })

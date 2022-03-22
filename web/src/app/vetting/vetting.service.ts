@@ -1,27 +1,37 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnChanges, SimpleChanges } from '@angular/core';
-import { catchError, map, Observable, Subject, throwError } from 'rxjs';
-import { ICandidate } from './candidate.model';
-import { IResult } from './result.model'
+import { catchError, forkJoin, map, Observable, Subject, throwError } from 'rxjs';
+import { Candidate } from './candidate.model';
+import { Result } from './result.model'
+
+interface Star{
+  name: string,
+  type: string,
+  metallicity: number,
+  surface_gravity: number,
+  temperature: number,
+  aliases: string[],
+  known_exoplanets: string[]
+}
+
+interface Prediction{
+  prediction: string,
+  image: string
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class VettingService{
 
-  result: IResult = {
-    id: null,
-    prediction: null,
-    image: null
-  }
 
-  newPrediction = new Subject<ICandidate>()
+  newPrediction = new Subject<Candidate>()
   newError = new Subject<string>()
 
 
   constructor(private http: HttpClient) { }
 
-  makeNewPrediction(candidate: ICandidate){
+  makeNewPrediction(candidate: Candidate){
     this.newPrediction.next(candidate)
   }
 
@@ -29,58 +39,42 @@ export class VettingService{
     this.newError.next(error)
   }
 
-  get_unique(values: string[]){
-    let star_name: string = values[0][0]
-    let star_aliases: string[] = []
-    let known_exoplanets: string[] = []
+  get_unique_values(values: string[]): string[] {
+    let unique_values: string[] = []
     for(let i = 0; i<values.length; i++){
-      if(!star_aliases.includes(values[i][2])){
-        star_aliases.push(values[i][2])
-      }
-      if(!known_exoplanets.includes(values[i][1])){
-        known_exoplanets.push(values[i][1])
+      if(!unique_values.includes(values[i])){
+        unique_values.push(values[i])
       }
     }
-    console.log(star_name, star_aliases, known_exoplanets)
+    return unique_values
   }
 
-  getPredictionFromAstronet(candidate: ICandidate){
+  get_mean_value(values: string[]): number{
+    return values.map(Number).reduce((a, b) => a + b, 0)/values.length
+  }
 
-    let prefix = ""
-    switch(candidate.mission){
-      case "kepler":
-        prefix = "kic"
-        break;
-      case "tess":
-        prefix = "tic"
-        break;
-    }
-    let full_id = prefix + candidate.id
-
-
-    this.http.get<any>('http://simbad.u-strasbg.fr/simbad/sim-tap/sync',
-    {
-      params: {
-        request: "doQuery",
-        lang: "adql",
-        format: "json",
-        query: `SELECT star.main_id AS star_name, planet.main_id AS planet_name, i1.id AS alias
-        FROM basic AS planet
-        JOIN h_link ON child = planet.oid
-        JOIN ident AS i1 ON i1.oidref = parent
-        JOIN ident AS i2 ON i2.oidref = i1.oidref
-        JOIN basic AS star ON star.oid = i2.oidref WHERE i2.id = 'KIC011442793'`,
-      }
-    }).pipe(
-      map(response=>{
-        return response["data"]
+  getResult(candidate: Candidate){
+    return forkJoin(this.getStarDetails(candidate), this.getPredictionFromAstronet(candidate)
+    ).pipe(
+      map((response: any)=>{
+        return <Result>{
+          star_id: candidate.id,
+          star_name: response[0].name,
+          star_type: response[0].type,
+          star_metallicity: response[0].metallicity,
+          star_surface_gravity: response[0].surface_gravity,
+          star_temperature: response[0].temperature,
+          star_aliases: response[0].aliases,
+          known_exoplanets: response[0].known_exoplanets,
+          prediction: response[1].prediction,
+          image: response[1].image
+        }
       })
-    ).subscribe(result=>{
-      this.get_unique(result)
-    })
+    )
+  }
 
-
-    return this.http.get<IResult>('http://127.0.0.1:4201/',
+  getPredictionFromAstronet(candidate: Candidate){
+    return this.http.get<Prediction>('http://127.0.0.1:4201/',
     {
       params: {
         mission: candidate.mission,
@@ -92,11 +86,11 @@ export class VettingService{
       }
     }
     ).pipe(
-      map(response=>{
-        console.log(response)
-        this.result = response
-        this.result.id = candidate.id
-        return this.result
+      map((response: any)=>{
+        return <Prediction>{
+          prediction: response.prediction,
+          image: response.image
+        }
       }),
       catchError(error=>{
         this.getError(error.error)
@@ -105,6 +99,52 @@ export class VettingService{
     )
   }
 
-
-
+  getStarDetails<star>(candidate: Candidate){
+    let id = candidate.id
+    switch(candidate.mission){
+      case "kepler":
+        id = "kic" + id
+        break;
+      case "tess":
+        id + "tic" + id
+        break;
+    }
+    return this.http.get<star>('http://simbad.u-strasbg.fr/simbad/sim-tap/sync',
+    {
+      params: {
+        request: "doQuery",
+        lang: "adql",
+        format: "json",
+        max_records: "10000",
+        query: `SELECT
+                  star_basic.main_id,
+                  star_basic.otype_txt,
+                  star_extended.fe_h,
+                  star_extended.log_g,
+                  star_extended.teff,
+                  star_alias.id,
+                  planet.main_id
+                FROM basic AS planet
+                  JOIN h_link AS link ON link.child = planet.oid
+                  JOIN ident AS star_alias ON star_alias.oidref = link.parent
+                  JOIN mesFe_h AS star_extended ON star_extended.oidref = star_alias.oidref
+                  JOIN basic AS star_basic ON star_basic.oid = star_extended.oidref
+                  JOIN ident AS star ON star.oidref = star_basic.oid
+                WHERE star.id = '` + id + `'`
+      }
+    }).pipe(
+      map((response: any)=>{
+        const result = response["data"]
+        return <Star>{
+          name: String(result[0][0]),
+          type: String(result[0][1]),
+          metallicity: this.get_mean_value(result.map((column: string) => column[2])),
+          surface_gravity: this.get_mean_value(result.map((column: string) => column[3])),
+          temperature: this.get_mean_value(result.map((column: string) => column[4])),
+          aliases: this.get_unique_values(result.map((column: string) => column[5])),
+          known_exoplanets: this.get_unique_values(result.map((column: string) => column[6]))
+        }
+      })
+    )
+  }
 }

@@ -20,8 +20,8 @@
       <mat-error *ngIf="details.get('id')?.hasError('required')">
         This field is required
       </mat-error>
-      <mat-error *ngIf="details.get('id')?.hasError('invalidID')">
-        ID must be a 9-digit positive number
+      <mat-error *ngIf="details.get('id')?.hasError('invalidNumber')">
+        ID must be a positive integer
       </mat-error>
     </mat-form-field>
 

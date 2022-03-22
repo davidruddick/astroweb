@@ -1,4 +1,4 @@
-export interface ICandidate{
+export interface Candidate{
 
     mission: string,
     id: string,

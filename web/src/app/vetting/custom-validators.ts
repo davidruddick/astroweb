@@ -3,7 +3,7 @@ import { AbstractControl, FormControl } from '@angular/forms';
 
 export function isValidID(control: AbstractControl){
   let value: string = control.value
-  if(isNaN(parseInt(value)) || parseInt(value)<0 || value.length != 9 ){
+  if(isNaN(parseInt(value)) || parseInt(value)<0 || value.length < 7 || value.length > 9){
     return { invalidID: true }
   }
   return null

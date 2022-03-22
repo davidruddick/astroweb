@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ICandidate } from '../candidate.model';
+import { Candidate } from '../candidate.model';
 import { isPositiveInt, isPositiveNumber, isValidID, isZeroOrPositiveNumber } from '../custom-validators';
 import { VettingService } from '../vetting.service';
 
@@ -16,7 +16,7 @@ export class VettingDetailsComponent implements OnInit {
   details = new FormGroup({
     mission: new FormControl("", [Validators.required]),
     prefix: new FormControl(""),
-    id: new FormControl("", [Validators.required, isValidID]),
+    id: new FormControl("", [Validators.required, isPositiveInt]),
     period: new FormControl("", [Validators.required, isPositiveNumber]),
     duration: new FormControl("", [Validators.required, isPositiveNumber]),
     t0: new FormControl("", [isZeroOrPositiveNumber]),
@@ -48,7 +48,7 @@ export class VettingDetailsComponent implements OnInit {
 
     this.error = null;
 
-    let candidate: ICandidate = {
+    let candidate: Candidate = {
       mission: this.details.value.mission,
       id: this.details.value.id,
       period: this.details.value.period,

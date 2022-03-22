@@ -14,4 +14,4 @@ FROM basic AS planet
   JOIN basic AS star_basic ON star_basic.oid = star_extended.oidref 
   JOIN ident AS star ON star.oidref = star_basic.oid
 
-WHERE star.id = 'KIC011442793'
+WHERE star.id = 'kic011442793'
