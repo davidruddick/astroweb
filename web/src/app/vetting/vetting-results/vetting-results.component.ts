@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { catchError } from 'rxjs';
+import { Result } from '../result.model';
 import { VettingService } from '../vetting.service';
 
 @Component({
@@ -14,22 +15,27 @@ export class VettingResultsComponent implements OnInit {
   image_path: string | null = null;
   prediction: string | null = null;
   error: string | null = null;
+  star_name: string | null = null;
 
   constructor(private vet: VettingService) { }
 
   ngOnInit(): void {
     this.vet.newPrediction.subscribe(candidate=>{
       this.vetting = true;
-      this.vet.getResult(candidate).subscribe(result=>{
-        console.log(result)
-        this.id = result.star_id
-        this.prediction = result.prediction
-        this.image_path = "../assets/download/" + result.image
-        this.vetting = false
-      },
-      error=>{
-        this.vetting = false
-      })
+      this.vet.getResult(candidate).subscribe(
+        result=>{
+          console.log(result)
+          this.star_name = result.star_name ? result.star_name : result.star_id
+          this.id = result.star_id
+          this.prediction = result.prediction
+          this.image_path = "../assets/download/" + result.image
+          this.vetting = false
+        },
+        error=>{
+          console.log(error)
+          this.vetting = false
+        }
+      )
     })
   }
 

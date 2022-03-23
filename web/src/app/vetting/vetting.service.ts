@@ -57,18 +57,21 @@ export class VettingService{
     return forkJoin(this.getStarDetails(candidate), this.getPredictionFromAstronet(candidate)
     ).pipe(
       map((response: any)=>{
-        return <Result>{
-          star_id: candidate.id,
-          star_name: response[0].name,
-          star_type: response[0].type,
-          star_metallicity: response[0].metallicity,
-          star_surface_gravity: response[0].surface_gravity,
-          star_temperature: response[0].temperature,
-          star_aliases: response[0].aliases,
-          known_exoplanets: response[0].known_exoplanets,
-          prediction: response[1].prediction,
-          image: response[1].image
-        }
+          return <Result>{
+            star_id: candidate.id,
+            star_name: response[0].name,
+            star_type: response[0].type,
+            star_metallicity: response[0].metallicity,
+            star_surface_gravity: response[0].surface_gravity,
+            star_temperature: response[0].temperature,
+            star_aliases: response[0].aliases,
+            known_exoplanets: response[0].known_exoplanets,
+            prediction: response[1].prediction,
+            image: response[1].image
+          }
+      }),
+      catchError(error=>{
+        return throwError(error)
       })
     )
   }
@@ -118,7 +121,7 @@ export class VettingService{
         max_records: "10000",
         query: `SELECT
                   star_basic.main_id,
-                  star_basic.otype_txt,
+                  star_basic.sp_type,
                   star_extended.fe_h,
                   star_extended.log_g,
                   star_extended.teff,
@@ -135,15 +138,21 @@ export class VettingService{
     }).pipe(
       map((response: any)=>{
         const result = response["data"]
-        return <Star>{
-          name: String(result[0][0]),
-          type: String(result[0][1]),
-          metallicity: this.get_mean_value(result.map((column: string) => column[2])),
-          surface_gravity: this.get_mean_value(result.map((column: string) => column[3])),
-          temperature: this.get_mean_value(result.map((column: string) => column[4])),
-          aliases: this.get_unique_values(result.map((column: string) => column[5])),
-          known_exoplanets: this.get_unique_values(result.map((column: string) => column[6]))
-        }
+          return <Star>{
+            name: String(result[0][0]),
+            type: String(result[0][1]),
+            metallicity: this.get_mean_value(result.map((column: string) => column[2])),
+            surface_gravity: this.get_mean_value(result.map((column: string) => column[3])),
+            temperature: this.get_mean_value(result.map((column: string) => column[4])),
+            aliases: this.get_unique_values(result.map((column: string) => column[5])),
+            known_exoplanets: this.get_unique_values(result.map((column: string) => column[6]))
+          }
+      }),
+      catchError(error=>{
+        console.log(error)
+        let message = "No star found matching given ID"
+        this.getError(message)
+        return throwError(() => new Error(message))
       })
     )
   }

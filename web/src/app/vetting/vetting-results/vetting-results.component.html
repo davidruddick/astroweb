@@ -1,5 +1,9 @@
 <mat-card class="results">
 
+  <mat-card-title *ngIf="prediction">
+    {{star_name}}
+  </mat-card-title>
+
   <mat-card-subtitle *ngIf="!prediction">
     No results to display
   </mat-card-subtitle>
