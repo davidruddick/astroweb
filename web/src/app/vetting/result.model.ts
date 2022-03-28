@@ -1,3 +1,5 @@
+import { Planet } from "./planet.model";
+
 export interface Result{
 
   star_id: string,
@@ -7,7 +9,7 @@ export interface Result{
   star_surface_gravity: number,
   star_temperature: number,
   star_aliases: string[],
-  known_exoplanets: string[],
+  known_exoplanets: Planet[],
   prediction: string | null,
   image: string | null
 

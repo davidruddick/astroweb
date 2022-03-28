@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnChanges, SimpleChanges } from '@angular/core';
 import { catchError, forkJoin, map, Observable, Subject, throwError } from 'rxjs';
 import { Candidate } from './candidate.model';
+import { Planet } from './planet.model';
 import { Result } from './result.model'
 
 interface Star{
@@ -11,7 +12,7 @@ interface Star{
   surface_gravity: number,
   temperature: number,
   aliases: string[],
-  known_exoplanets: string[]
+  known_exoplanets: Planet[]
 }
 
 interface Prediction{
@@ -51,6 +52,32 @@ export class VettingService{
 
   get_mean_value(values: string[]): number{
     return values.map(Number).reduce((a, b) => a + b, 0)/values.length
+  }
+
+  get_planets(arrays: any[]): Planet[]{
+
+    let planets: Planet[] = []
+    for(var i=0; i<arrays.length; i++){
+      let planet_name = arrays[i][6]
+      if(!this.doesPlanetAlreadyExist(planets, planet_name)){
+        let planet: Planet = {
+          planet_name: planet_name,
+          planet_dec: arrays[i][7],
+          planet_ra: arrays[i][8]
+        }
+        planets.push(planet)
+      }
+    }
+    return planets
+  }
+
+  doesPlanetAlreadyExist(planets: Planet[], planet_name: string) {
+    for(let i=0; i<planets.length; i++){
+      if(planets[i].planet_name == planet_name){
+        return true
+      }
+    }
+    return false
   }
 
   getResult(candidate: Candidate){
@@ -126,7 +153,9 @@ export class VettingService{
                   star_extended.log_g,
                   star_extended.teff,
                   star_alias.id,
-                  planet.main_id
+                  planet.main_id,
+                  planet.ra,
+                  planet.dec
                 FROM basic AS planet
                   JOIN h_link AS link ON link.child = planet.oid
                   JOIN ident AS star_alias ON star_alias.oidref = link.parent
@@ -145,7 +174,7 @@ export class VettingService{
             surface_gravity: this.get_mean_value(result.map((column: string) => column[3])),
             temperature: this.get_mean_value(result.map((column: string) => column[4])),
             aliases: this.get_unique_values(result.map((column: string) => column[5])),
-            known_exoplanets: this.get_unique_values(result.map((column: string) => column[6]))
+            known_exoplanets: this.get_planets(result)
           }
       }),
       catchError(error=>{

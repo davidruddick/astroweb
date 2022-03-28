@@ -12,16 +12,22 @@ export class VettingResultsComponent implements OnInit {
 
   vetting = false;
   id: string | null = null;
+  star_name: string | null = null;
   image_path: string | null = null;
   prediction: string | null = null;
   error: string | null = null;
-  star_name: string | null = null;
 
   constructor(private vet: VettingService) { }
 
   ngOnInit(): void {
     this.vet.newPrediction.subscribe(candidate=>{
       this.vetting = true;
+      this.id = null;
+      this.star_name = null;
+      this.image_path = null;
+      this.prediction = null;
+      this.error = null;
+
       this.vet.getResult(candidate).subscribe(
         result=>{
           console.log(result)

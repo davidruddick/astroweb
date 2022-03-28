@@ -9,7 +9,6 @@ def download_fits(mission, id, sector=None):
     fits_dir = os.path.join(os.getcwd(), "fits", id) # where the fits files will be downloaded to
     img_dir = os.path.join(os.getcwd(), "web\\src\\assets\\download\\" + str(math.floor(time.time())) + ".png")
     os.makedirs(fits_dir, exist_ok = True)
-    os.makedirs(os.path.join(os.getcwd(), "images"), exist_ok = True)
     
     if mission == "kepler":
         url = "http://archive.stsci.edu/pub/kepler/lightcurves/" + id[0:4] + "/" + id
@@ -71,4 +70,21 @@ def run_command(command):
 
 
 def tidy(fits_dir):
-    shutil.rmtree(os.path.join(fits_dir))  
+
+    # delete fits dir
+    shutil.rmtree(fits_dir)
+
+    # delete any old fits dirs that may not have been tidied properly
+    path = 'fits'
+    for folder in os.listdir(path):
+        mod_date = os.stat(os.path.join(path, folder)).st_mtime
+        if(time.time() - mod_date > 86400):
+            shutil.rmtree(os.path.join(path, folder))
+
+    # delete images from download folder if older than 1 day
+    path = 'web\\src\\assets\\download'
+    for file in os.listdir(path):
+        name = file.split('.')[0]
+        if time.time() - float(name) > 86400:
+            os.remove(os.path.join(path, file))
+
