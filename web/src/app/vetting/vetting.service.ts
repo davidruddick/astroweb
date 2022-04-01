@@ -55,7 +55,6 @@ export class VettingService{
   }
 
   get_planets(arrays: any[]): Planet[]{
-
     let planets: Planet[] = []
     for(var i=0; i<arrays.length; i++){
       let planet_name = arrays[i][6]
@@ -71,7 +70,7 @@ export class VettingService{
     return planets
   }
 
-  doesPlanetAlreadyExist(planets: Planet[], planet_name: string) {
+  doesPlanetAlreadyExist(planets: Planet[], planet_name: string): boolean {
     for(let i=0; i<planets.length; i++){
       if(planets[i].planet_name == planet_name){
         return true
@@ -80,7 +79,7 @@ export class VettingService{
     return false
   }
 
-  getResult(candidate: Candidate){
+  getResult(candidate: Candidate): Observable<Result>{
     return forkJoin(this.getStarDetails(candidate), this.getPredictionFromAstronet(candidate)
     ).pipe(
       map((response: any)=>{
@@ -103,7 +102,7 @@ export class VettingService{
     )
   }
 
-  getPredictionFromAstronet(candidate: Candidate){
+  getPredictionFromAstronet(candidate: Candidate): Observable<Prediction>{
     return this.http.get<Prediction>('http://127.0.0.1:4201/',
     {
       params: {
@@ -129,7 +128,7 @@ export class VettingService{
     )
   }
 
-  getStarDetails<star>(candidate: Candidate){
+  getStarDetails(candidate: Candidate): Observable<Star>{
     let id = candidate.id
     switch(candidate.mission){
       case "kepler":
@@ -139,7 +138,7 @@ export class VettingService{
         id + "tic" + id
         break;
     }
-    return this.http.get<star>('http://simbad.u-strasbg.fr/simbad/sim-tap/sync',
+    return this.http.get<Star>('http://simbad.u-strasbg.fr/simbad/sim-tap/sync',
     {
       params: {
         request: "doQuery",
