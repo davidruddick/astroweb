@@ -1,4 +1,4 @@
-.results{
+.results_section{
   margin: 1rem;
 }
 
@@ -17,4 +17,17 @@
 
 .background-image{
   margin: 1rem;
+}
+
+.mat-list-item{
+  font-size: 14px;
+}
+
+table{
+  width: 100%;
+}
+
+td.mat-cell, th.mat-header-cell {
+  text-align: center;
+  justify-content:center;
 }

@@ -22,7 +22,8 @@ import { AppRoutes } from './app-routes.module';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatTableModule} from '@angular/material/table';
 
 
 @NgModule({
@@ -48,6 +49,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatSelectModule,
     MatCardModule,
     MatProgressBarModule,
+    MatExpansionModule,
+    MatTableModule,
     RouterModule,
     AppRoutes,
     FormsModule,

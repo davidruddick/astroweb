@@ -1,21 +1,72 @@
-<mat-card class="results">
+<mat-card class="results_section">
 
-  <mat-card-title *ngIf="prediction">
-    {{star_name}}
-  </mat-card-title>
-
-  <mat-card-subtitle *ngIf="!prediction">
+  <mat-card-subtitle *ngIf="!result">
     No results to display
   </mat-card-subtitle>
 
-  <img *ngIf="image_path" mat-card-image src="{{image_path}}" alt="Light curve">
 
-  <mat-card-content *ngIf="prediction">
-    <p>Prediction = {{prediction}}</p>
-  </mat-card-content>
 
-  <mat-card-footer *ngIf="vetting">
+<div class="results" *ngIf="result">
+
+  <mat-card-title>
+    {{result.star_name}}
+  </mat-card-title>
+
+  <div class="prediction">
+    <mat-card-content>
+      <p>Probability that this is a transit event: {{result.prediction}}</p>
+    </mat-card-content>
+    <img mat-card-image src="{{result.image}}" alt="Light curve">
+  </div>
+
+  <div class="star_details">
+    <p>Star Information</p>
+    <mat-list>
+      <mat-list-item>Star type: {{result.star_type}}</mat-list-item>
+      <mat-list-item>Effective temperature: {{result.star_temperature}} &#8451;</mat-list-item>
+      <mat-list-item>Surface gravity: {{result.star_surface_gravity}} m/s<sup>2</sup></mat-list-item>
+      <mat-list-item>Metallicity index (relative to the sun): {{result.star_metallicity}} Fe/H</mat-list-item>
+    </mat-list>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Star aliases</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list *ngFor="let alias of result.star_aliases">
+          <mat-list-item>{{alias}}</mat-list-item>
+        </mat-list>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Known exoplanets</mat-panel-title>
+          <mat-panel-description>{{numberOfPlanets}}</mat-panel-description>
+        </mat-expansion-panel-header>
+        <table mat-table [dataSource]="result.known_exoplanets" class="mat-elevation-z8">
+          <ng-container matColumnDef="planet_name">
+            <th mat-header-cell *matHeaderCellDef>Planet designation</th>
+            <td mat-cell *matCellDef="let planet">{{planet.planet_name}}</td>
+          </ng-container>
+          <ng-container matColumnDef="planet_dec">
+            <th mat-header-cell *matHeaderCellDef>Declination</th>
+            <td mat-cell *matCellDef="let planet">{{planet.planet_dec}}</td>
+          </ng-container>
+          <ng-container matColumnDef="planet_ra">
+            <th mat-header-cell *matHeaderCellDef>Right ascension</th>
+            <td mat-cell *matCellDef="let planet">{{planet.planet_ra}}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="planetKeys"></tr>
+          <tr mat-row *matRowDef="let row; columns: planetKeys;"></tr>
+        </table>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+</div>
+
+  <mat-card-footer *ngIf="getting_results">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </mat-card-footer>
 
 </mat-card>
+
+

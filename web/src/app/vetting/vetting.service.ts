@@ -85,15 +85,15 @@ export class VettingService{
       map((response: any)=>{
           return <Result>{
             star_id: candidate.id,
-            star_name: response[0].name,
-            star_type: response[0].type,
+            star_name: response[0].name ? response[0].name : candidate.id,
+            star_type: response[0].type !="null" ? response[0].type : "Unknown",
             star_metallicity: response[0].metallicity,
-            star_surface_gravity: response[0].surface_gravity,
-            star_temperature: response[0].temperature,
+            star_surface_gravity: response[0].surface_gravity / 100,
+            star_temperature: response[0].temperature + 273.15,
             star_aliases: response[0].aliases,
             known_exoplanets: response[0].known_exoplanets,
             prediction: response[1].prediction,
-            image: response[1].image
+            image: "../assets/download/" + response[1].image
           }
       }),
       catchError(error=>{

@@ -10,36 +10,29 @@ import { VettingService } from '../vetting.service';
 })
 export class VettingResultsComponent implements OnInit {
 
-  vetting = false;
-  id: string | null = null;
-  star_name: string | null = null;
-  image_path: string | null = null;
-  prediction: string | null = null;
+  getting_results = false;
+  result: Result | null = null;
   error: string | null = null;
+  numberOfPlanets = 0
+  planetKeys = ["planet_name", "planet_dec", "planet_ra"]
 
   constructor(private vet: VettingService) { }
 
   ngOnInit(): void {
     this.vet.newPrediction.subscribe(candidate=>{
-      this.vetting = true;
-      this.id = null;
-      this.star_name = null;
-      this.image_path = null;
-      this.prediction = null;
+      this.getting_results = true;
       this.error = null;
 
       this.vet.getResult(candidate).subscribe(
         result=>{
           console.log(result)
-          this.star_name = result.star_name ? result.star_name : result.star_id
-          this.id = result.star_id
-          this.prediction = result.prediction
-          this.image_path = "../assets/download/" + result.image
-          this.vetting = false
+          this.result = result
+          this.numberOfPlanets = this.result.known_exoplanets.length
+          this.getting_results = false
         },
         error=>{
           console.log(error)
-          this.vetting = false
+          this.getting_results = false
         }
       )
     })
