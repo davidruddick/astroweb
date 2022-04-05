@@ -14,7 +14,7 @@ export class VettingResultsComponent implements OnInit {
   result: Result | null = null;
   error: string | null = null;
   numberOfPlanets = 0
-  planetKeys = ["planet_name", "planet_dec", "planet_ra"]
+  planetKeys = ["planet_name", "period", "discovery_date", "discovery_method"]
 
   constructor(private vet: VettingService) { }
 

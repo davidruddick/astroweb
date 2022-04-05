@@ -1,6 +1,7 @@
+import { formatPercent } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnChanges, SimpleChanges } from '@angular/core';
-import { catchError, forkJoin, map, Observable, Subject, throwError } from 'rxjs';
+import { catchError, concatMap, forkJoin, map, mergeMap, Observable, Subject, throwError } from 'rxjs';
 import { Candidate } from './candidate.model';
 import { Planet } from './planet.model';
 import { Result } from './result.model'
@@ -8,11 +9,13 @@ import { Result } from './result.model'
 interface Star{
   name: string,
   type: string,
+  declination: string,
+  right_ascension: string,
   metallicity: number,
   surface_gravity: number,
   temperature: number,
   aliases: string[],
-  known_exoplanets: Planet[]
+  known_exoplanets?: Planet[]
 }
 
 interface Prediction{
@@ -54,15 +57,25 @@ export class VettingService{
     return values.map(Number).reduce((a, b) => a + b, 0)/values.length
   }
 
-  get_planets(arrays: any[]): Planet[]{
+  get_gaia_id(aliases: string[]): string | null{
+    for(let alias of aliases){
+      if(alias.substring(0, 4) == "Gaia"){
+        return "Gaia DR2 " + alias.split(' ')[2]
+      }
+    }
+    return null
+  }
+
+  get_unique_planets(arrays: any[], star_name: string){
     let planets: Planet[] = []
     for(var i=0; i<arrays.length; i++){
-      let planet_name = arrays[i][6]
-      if(!this.doesPlanetAlreadyExist(planets, planet_name)){
+      let planet_letter = arrays[i]["pl_letter"]
+      if(!this.doesPlanetAlreadyExist(planets, planet_letter)){
         let planet: Planet = {
-          planet_name: planet_name,
-          planet_dec: arrays[i][7],
-          planet_ra: arrays[i][8]
+          planet_name: star_name + planet_letter,
+          period: arrays[i]["pl_orbper"],
+          discovery_date: arrays[i]["disc_year"],
+          discovery_method: arrays[i]["discoverymethod"]
         }
         planets.push(planet)
       }
@@ -70,9 +83,9 @@ export class VettingService{
     return planets
   }
 
-  doesPlanetAlreadyExist(planets: Planet[], planet_name: string): boolean {
+  doesPlanetAlreadyExist(planets: Planet[], planet_letter: string): boolean {
     for(let i=0; i<planets.length; i++){
-      if(planets[i].planet_name == planet_name){
+      if(planets[i].planet_name.slice(-1) == planet_letter){
         return true
       }
     }
@@ -144,20 +157,17 @@ export class VettingService{
         request: "doQuery",
         lang: "adql",
         format: "json",
-        max_records: "10000",
+        max_records: "1000",
         query: `SELECT
                   star_basic.main_id,
                   star_basic.sp_type,
+                  star_basic.dec,
+                  star_basic.ra,
                   star_extended.fe_h,
                   star_extended.log_g,
                   star_extended.teff,
-                  star_alias.id,
-                  planet.main_id,
-                  planet.ra,
-                  planet.dec
-                FROM basic AS planet
-                  JOIN h_link AS link ON link.child = planet.oid
-                  JOIN ident AS star_alias ON star_alias.oidref = link.parent
+                  star_alias.id
+                FROM ident AS star_alias
                   JOIN mesFe_h AS star_extended ON star_extended.oidref = star_alias.oidref
                   JOIN basic AS star_basic ON star_basic.oid = star_extended.oidref
                   JOIN ident AS star ON star.oidref = star_basic.oid
@@ -169,12 +179,32 @@ export class VettingService{
           return <Star>{
             name: String(result[0][0]),
             type: String(result[0][1]),
-            metallicity: this.get_mean_value(result.map((column: string) => column[2])),
-            surface_gravity: this.get_mean_value(result.map((column: string) => column[3])),
-            temperature: this.get_mean_value(result.map((column: string) => column[4])),
-            aliases: this.get_unique_values(result.map((column: string) => column[5])),
-            known_exoplanets: this.get_planets(result)
+            declination: String(result[0][2]),
+            right_ascension: String(result[0][3]),
+            metallicity: this.get_mean_value(result.map((column: string) => column[4])),
+            surface_gravity: this.get_mean_value(result.map((column: string) => column[5])),
+            temperature: this.get_mean_value(result.map((column: string) => column[6])),
+            aliases: this.get_unique_values(result.map((column: string) => column[7]))
           }
+      }),
+      concatMap((star: Star)=>{
+        let gaia_id = this.get_gaia_id(star.aliases)
+        console.log(gaia_id)
+        return this.http.get<Star>('https://exoplanetarchive.ipac.caltech.edu/TAP/sync',
+        {
+          params: {
+                  request: "doQuery",
+                  lang: "adql",
+                  format: "json",
+                  max_records: "1000",
+                  query: `SELECT pl_letter, disc_year, discoverymethod, pl_orbper FROM ps WHERE gaia_id = '` + gaia_id +  `'`
+                }
+        }).pipe(
+          map((response: any)=>{
+            star.known_exoplanets = this.get_unique_planets(response, star.name)
+            return star
+          })
+        )
       }),
       catchError(error=>{
         console.log(error)
