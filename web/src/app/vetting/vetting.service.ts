@@ -207,6 +207,7 @@ export class VettingService{
         )
       }),
       catchError(error=>{
+        console.log(error)
         let message = ""
         if(error.status == "400"){
           message = "Error retrieving star information. Please confirm ID is correct."

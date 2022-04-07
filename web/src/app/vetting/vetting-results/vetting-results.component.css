@@ -20,14 +20,21 @@
 }
 
 .mat-list-item{
+  width: 100%;
   font-size: 14px;
+}
+
+.star_property{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
 table{
   width: 100%;
 }
 
-td.mat-cell, th.mat-header-cell {
+td.mat-cell, th.mat-header-cell{
   text-align: center;
   justify-content:center;
 }

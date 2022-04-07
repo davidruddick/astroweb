@@ -66,7 +66,9 @@ def build_command(mission, id, period, duration, t0, fits_dir, img_dir):
 
 def run_command(command):
     print("Making prediction...")
-    return str(round(float(str((subprocess.run(command, shell=True, check=True, capture_output=True).stdout)).split(" ")[1][:-5])*100, 2)) + "%"
+    prediction = str(round(float(str((subprocess.run(command, shell=True, check=True, capture_output=True).stdout)).split(" ")[1][:-5])*100, 2)) + "%"
+    print(prediction)
+    return prediction
 
 
 def tidy(fits_dir):
