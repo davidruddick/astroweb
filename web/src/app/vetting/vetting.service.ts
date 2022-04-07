@@ -1,4 +1,4 @@
-import { formatPercent } from '@angular/common';
+import { environment } from 'src/environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnChanges, SimpleChanges } from '@angular/core';
 import { catchError, concatMap, forkJoin, map, mergeMap, Observable, Subject, throwError } from 'rxjs';
@@ -39,7 +39,7 @@ export class VettingService{
     this.newPrediction.next(candidate)
   }
 
-  getError(error: string){
+  publishError(error: string){ // broadcast the error to interested parties
     this.newError.next(error)
   }
 
@@ -135,7 +135,7 @@ export class VettingService{
         }
       }),
       catchError(error=>{
-        this.getError(error.error)
+        this.publishError(error.error)
         return throwError(() => new Error(error.error))
       })
     )
@@ -198,7 +198,7 @@ export class VettingService{
                   format: "json",
                   max_records: "1000",
                   query: `SELECT pl_letter, disc_year, discoverymethod, pl_orbper FROM ps WHERE gaia_id = '` + gaia_id +  `'`
-                }
+          }
         }).pipe(
           map((response: any)=>{
             star.known_exoplanets = this.get_unique_planets(response, star.name)
@@ -207,9 +207,13 @@ export class VettingService{
         )
       }),
       catchError(error=>{
-        console.log(error)
-        let message = "No star found matching given ID"
-        this.getError(message)
+        let message = ""
+        if(error.status == "400"){
+          message = "Error retrieving star information. Please confirm ID is correct."
+        } else {
+          message = environment.default_error
+        }
+        this.publishError(message)
         return throwError(() => new Error(message))
       })
     )

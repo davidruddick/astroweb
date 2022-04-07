@@ -13,7 +13,6 @@ export class VettingResultsComponent implements OnInit {
   getting_results = false;
   result: Result | null = null;
   error: string | null = null;
-  numberOfPlanets = 0
   planetKeys = ["planet_name", "period", "discovery_date", "discovery_method"]
 
   constructor(private vet: VettingService) { }
@@ -21,13 +20,13 @@ export class VettingResultsComponent implements OnInit {
   ngOnInit(): void {
     this.vet.newPrediction.subscribe(candidate=>{
       this.getting_results = true;
+      this.result = null
       this.error = null;
 
       this.vet.getResult(candidate).subscribe(
         result=>{
           console.log(result)
           this.result = result
-          this.numberOfPlanets = this.result.known_exoplanets.length
           this.getting_results = false
         },
         error=>{
