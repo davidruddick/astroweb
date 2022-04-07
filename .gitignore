@@ -51,6 +51,10 @@ web/.angular/cache
 web/src/assets/download/
 fits/
 
+# trained models
+astronet/kepler/astronet/model/
+astronet/tess/astronet/model/
+
 # TypeScript v1 declaration files
 typings/
 
