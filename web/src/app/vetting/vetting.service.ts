@@ -31,7 +31,7 @@ export class VettingService{
 
   newPrediction = new Subject<Candidate>()
   newError = new Subject<string>()
-
+  newStatus = new Subject<string>();
 
   constructor(private http: HttpClient) { }
 
@@ -93,6 +93,17 @@ export class VettingService{
   }
 
   getResult(candidate: Candidate): Observable<Result>{
+
+    this.newStatus.next("Querying Astronet...")
+    let i = 0;
+    let waiting_messages = ["This may take a minute...", "Thankyou for waiting..."]
+    setInterval(() => {
+      if(i < waiting_messages.length){
+        this.newStatus.next(waiting_messages[i])
+        i++
+      }
+    }, 10000);
+
     return forkJoin(this.getStarDetails(candidate), this.getPredictionFromAstronet(candidate)
     ).pipe(
       map((response: any)=>{
@@ -189,7 +200,6 @@ export class VettingService{
       }),
       concatMap((star: Star)=>{
         let gaia_id = this.get_gaia_id(star.aliases)
-        console.log(gaia_id)
         return this.http.get<Star>('https://exoplanetarchive.ipac.caltech.edu/TAP/sync',
         {
           params: {

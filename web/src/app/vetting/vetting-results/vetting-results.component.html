@@ -1,7 +1,7 @@
 <mat-card class="results_section">
 
   <mat-card-subtitle *ngIf="!result">
-    No results to display
+    {{status}}
   </mat-card-subtitle>
 
 <div class="results" *ngIf="result">
@@ -10,15 +10,20 @@
     {{result.star_name}}
   </mat-card-title>
 
-  <div class="prediction">
+  <div>
     <mat-card-content>
-      <p>Probability that this is a transit event: {{result.prediction}}</p>
+      <p>
+        <span>Probability that this is a transit event: </span>
+        <span
+          [ngClass]="getClass()">{{result.prediction}}
+        </span>
+      </p>
     </mat-card-content>
     <img mat-card-image src="{{result.image}}" alt="Light curve">
   </div>
 
   <div class="star_details">
-    <p>Star Information</p>
+    <p>What do we already know about this star?</p>
     <mat-list>
       <mat-list-item>
         <p class="star_property"><span>Star type:</span><span>{{result.star_type}}</span></p>

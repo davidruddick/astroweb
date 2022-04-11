@@ -38,3 +38,11 @@ td.mat-cell, th.mat-header-cell{
   text-align: center;
   justify-content:center;
 }
+
+.good_prediction{
+  color: lightgreen;
+}
+
+.bad_prediction{
+  color: tomato
+}
