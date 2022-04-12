@@ -21,17 +21,20 @@ export class NavComponent {
 
   display_image(display: boolean){
 
-    let exoplanet_img = document.getElementById("exoplanet_big");
-    let src = document.getElementById("exoplanet_small")?.getAttribute("src")
+    let popup = document.getElementById("popup");
+    let img = document.getElementById("popup_image_large");
+    let src = document.getElementById("popup_image_small")?.getAttribute("src")
+    let caption = document.getElementById("popup_caption");
 
-    if(exoplanet_img != undefined && src != undefined){
+    if(popup && img && src && caption){ // if elements exist
 
       if(display){
-        exoplanet_img.setAttribute("src", src)
-        exoplanet_img.style.display = "block";
+        img.setAttribute("src", src)
+        caption.innerHTML = "Artist’s impression of the TRAPPIST-1 planetary system <br/> Credit: ESO/N. Bartmann/spaceengine.org"
+        popup.style.display = "block";
 
       } else{
-        exoplanet_img.style.display = "none";
+        popup.style.display = "none";
       }
 
 

@@ -4,7 +4,7 @@
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
       <div class="img-wrapper">
-        <img src="../../assets/images/eso1805a.jpg" id="exoplanet_small" class="logo" alt="menu" (click)="display_image(true)">
+        <img src="../../assets/images/eso1706a.jpg" id="popup_image_small" class="logo" alt="menu" (click)="display_image(true)">
       </div>
     <mat-nav-list>
       <a mat-list-item routerLink="" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}"><mat-icon>check</mat-icon>Vetting</a>
@@ -29,6 +29,7 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<div class="popup_image_background">
-  <img src="" id="exoplanet_big" class="popup_image" (click)="display_image(false)">
+<div id="popup" class="popup_image_background" (click)="display_image(false)">
+  <img src="" id="popup_image_large" class="popup_image">
+  <div id="popup_caption"></div>
 </div>
