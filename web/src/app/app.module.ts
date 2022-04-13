@@ -24,6 +24,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatTableModule} from '@angular/material/table';
+import { HelpComponent } from './about/help/help.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import {MatTableModule} from '@angular/material/table';
     VettingContainerComponent,
     VettingDetailsComponent,
     VettingResultsComponent,
-    AboutComponent
+    AboutComponent,
+    HelpComponent
   ],
   imports: [
     BrowserModule,

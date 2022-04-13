@@ -43,6 +43,10 @@ td.mat-cell, th.mat-header-cell{
   color: lightgreen;
 }
 
+.medium_prediction{
+  color: gold;
+}
+
 .bad_prediction{
   color: tomato
 }

@@ -18,13 +18,16 @@ export class VettingResultsComponent implements OnInit {
 
   constructor(private vet: VettingService) { }
 
-  getClass(): string{
+  getConfidence(): string{
     if(this.result?.prediction){
-      if(parseFloat(this.result?.prediction?.slice(0, -1)) > 75){
+      if(parseFloat(this.result.prediction.slice(0, -1)) > 90){ // confident yes
         return "good_prediction"
       }
+      if(parseFloat(this.result.prediction.slice(0, -1)) > 50){ // guessing
+        return "medium_prediction"
+      }
     }
-    return "bad_prediction"
+    return "bad_prediction" // confident no
   }
 
   ngOnInit(): void {
