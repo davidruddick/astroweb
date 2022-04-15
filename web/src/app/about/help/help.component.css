@@ -1,3 +1,31 @@
 .mat-expansion-panel{
   margin-bottom: 1rem
 }
+
+table{
+  width: 100%;
+}
+
+td.mat-cell, th.mat-header-cell{
+  text-align: left;
+  justify-content: left;
+}
+
+.mat-column-Key{
+  width: 25%;
+}
+
+.mat-column-errorKey{
+  width: 50%;
+}
+
+td, th{
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 250px;
+}
+
+img{
+  width: 100%;
+  object-fit: contain;
+}

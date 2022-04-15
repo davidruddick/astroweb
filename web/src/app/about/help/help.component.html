@@ -1,23 +1,81 @@
 <mat-accordion>
+
   <mat-expansion-panel>
+
     <mat-expansion-panel-header>
       <mat-panel-title>
         Choosing your input parameters
       </mat-panel-title>
     </mat-expansion-panel-header>
+
+    <mat-card-subtitle>
+      Astronet requires the following parameters in order to make a prediction. It cannot discover new planets unattended; it can only predict if
+      a suspected transit signal is a planet or not.
+    </mat-card-subtitle><br><br>
+
+    <table mat-table [dataSource]="input_items" class="mat-elevation-z8">
+      <ng-container matColumnDef="Key">
+        <td mat-cell *matCellDef="let parameter">
+          <mat-card-subtitle>{{parameter.item}}</mat-card-subtitle>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="Description">
+        <td mat-cell *matCellDef="let parameter">
+          <mat-card-subtitle>{{parameter.description}}</mat-card-subtitle>
+        </td>
+      </ng-container>
+      <tr mat-row *matRowDef="let row; columns: input_cols;"></tr>
+    </table>
+
   </mat-expansion-panel>
+
   <mat-expansion-panel>
+
     <mat-expansion-panel-header>
       <mat-panel-title>
         Interpreting the results
       </mat-panel-title>
     </mat-expansion-panel-header>
+
+    <img src="../../assets/images/example.png" alt="example_result"><br><br>
+
+    <table mat-table [dataSource]="example_items" class="mat-elevation-z8">
+      <ng-container matColumnDef="Key">
+        <td mat-cell *matCellDef="let item">
+          <mat-card-subtitle>{{item.index}}</mat-card-subtitle>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="Description">
+        <td mat-cell *matCellDef="let item">
+          <mat-card-subtitle>{{item.description}}</mat-card-subtitle>
+        </td>
+      </ng-container>
+      <tr mat-row *matRowDef="let row; columns: example_cols;"></tr>
+    </table>
+
   </mat-expansion-panel>
+
   <mat-expansion-panel>
+
     <mat-expansion-panel-header>
       <mat-panel-title>
         What does this error mean?
       </mat-panel-title>
     </mat-expansion-panel-header>
+
+    <table mat-table [dataSource]="error_items" class="mat-elevation-z8">
+      <ng-container matColumnDef="errorKey">
+        <td mat-cell *matCellDef="let error">
+          <mat-card-subtitle>{{error.error}}</mat-card-subtitle>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="Description">
+        <td mat-cell *matCellDef="let error">
+          <mat-card-subtitle>{{error.description}}</mat-card-subtitle>
+        </td>
+      </ng-container>
+      <tr mat-row *matRowDef="let row; columns: error_cols;"></tr>
+    </table>
+
   </mat-expansion-panel>
 </mat-accordion>
