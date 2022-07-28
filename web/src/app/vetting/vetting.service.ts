@@ -205,7 +205,6 @@ export class VettingService{
                   JOIN ident AS star ON star.oidref = star_basic.oid
                 WHERE star.id = '` + id + `'`
       },
-
     }).pipe(
       map((response: any)=>{
         const result = response["data"]
