@@ -1,5 +1,7 @@
 # Astroweb: An Angular web app for Astronet
 
+![figure41](https://user-images.githubusercontent.com/69145275/181589398-dd0851ef-b1c0-4cba-809f-f60ed819cd92.png)
+
 Code Author
 ---
 David Ruddick: [@davidruddick](https://github.com/davidruddick)
