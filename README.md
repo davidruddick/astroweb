@@ -50,7 +50,7 @@ Dependencies
 
 #### Notes:
 - The PYTHONPATH environment variable must be set to the Astronet directory. For example "D:\Astroweb\Astronet".
-- Astroweb.py calls Python 3.7 (line 72) using PyLauncher using `py -3.7 `. You may need to adjust this command depending on how Python is installed on your machine.
+- Astroweb.py calls Python 3.7 (line 72) with PyLauncher using `py -3.7 `. You may need to adjust this command depending on how Python is installed on your machine.
 - All Python modules are installed using pip. Ie `py -3.7 -m pip install tensorflow==1.15`.
 - Angular is installed using `npm install -g @angular/cli`.
 
