@@ -6,7 +6,7 @@ David Ruddick: [@davidruddick](https://github.com/davidruddick)
 
 Background
 ---
-This project is part of a Computer Science BSc(Hons) dissertation project through the University of Islands and Highlands (UHI). A web app has been built using the Angular framework, and a server to host Astronet models has been built in Python (with Flask).
+This project is part of a Computer Science BSc(Hons) dissertation project through the University of Highlands and Islands (UHI). A web app has been built using the Angular framework, and a server to host Astronet models has been built in Python (with Flask).
 
 References
 ---
