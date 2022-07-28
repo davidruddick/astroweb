@@ -20,4 +20,15 @@ TESS model [astronet-triage](https://github.com/yuliang419/Astronet-Triage/blob/
 
 TESS fork (adding compatability with fits data) [astronetTESS](https://github.com/B1ack2un/AstronetTESS/blob/main/README.md)
 
+---
+
 ## Walkthrough
+
+Install Dependencies
+---
+
+Additional Configuration
+---
+
+Hosting
+---
