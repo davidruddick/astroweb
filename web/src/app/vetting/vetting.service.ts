@@ -180,7 +180,7 @@ export class VettingService{
         id = "kic" + id
         break;
       case "tess":
-        id + "tic" + id
+        id = "tic" + id
         break;
     }
     return this.http.get<Star>('http://simbad.u-strasbg.fr/simbad/sim-tap/sync',
