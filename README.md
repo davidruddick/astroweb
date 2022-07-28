@@ -57,7 +57,7 @@ Dependencies
 
 Using a pre-trained model
 ---
-Pre-trained model available [here](https://drive.google.com/file/d/1dd6c3P1OWykrQgn2quQS7eV1S0qv_qAk/view?usp=sharing)
+Pre-trained model available [here](https://drive.google.com/file/d/1dd6c3P1OWykrQgn2quQS7eV1S0qv_qAk/view?usp=sharing).
 Extract the files to ..\astroweb\astronet\kepler\astronet\model (overwrite if neccessary).
 
 Training a model
