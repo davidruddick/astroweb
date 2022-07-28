@@ -57,6 +57,19 @@ Dependencies
 
 Using a pre-trained model
 ---
+Pre-trained model available [here](https://drive.google.com/file/d/1dd6c3P1OWykrQgn2quQS7eV1S0qv_qAk/view?usp=sharing)
+Extract the files to ..\astroweb\astronet\kepler\astronet\model (overwrite if neccessary).
+
+Training a model
+---
+1. Open PowerShell and navigate to ..\astroweb\astronet\kepler\astronet
+2. `py -3.7 train.py --model=AstroCNNModel --config-name=local_global --train_files=train/train* --eval_files=train/val* --model_dir=model`
 
 Hosting
 ---
+Note: I use Windows Terminal for this so I can tile multiple PowerShell instances in one window. But each to their own...
+1. Open PowerShell and navigate to ..\astroweb
+2. Run `serv.ps1`
+3. Open new PowerShell instance (as Administrator) and navigate to ..\astroweb\web
+4. Run `ng serve`. This will take some time initially as it installs the neccessary Node packages.
+
