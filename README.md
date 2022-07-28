@@ -72,4 +72,6 @@ Note: I use Windows Terminal for this so I can tile multiple PowerShell instance
 2. Run `serv.ps1`
 3. Open new PowerShell instance (as Administrator) and navigate to ..\astroweb\web
 4. Run `ng serve`. This will take some time initially as it installs the neccessary Node packages.
+5. Once running, open a browser and navigate to http://localhost:4200.
 
+Instructions on how to use the application are included in the "help" menu.
