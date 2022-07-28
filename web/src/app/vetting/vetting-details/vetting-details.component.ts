@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Candidate } from '../candidate.model';
-import { isPositiveInt, isPositiveNumber, isValidID, isZeroOrPositiveNumber } from '../custom-validators';
+import { isPositiveInt, isPositiveNumber, isZeroOrPositiveNumber } from '../custom-validators';
 import { VettingService } from '../vetting.service';
 
 
@@ -44,7 +43,7 @@ export class VettingDetailsComponent implements OnInit {
     })
   }
 
-  onClick(){
+  onClick(): void{
 
     this.error = null;
 
@@ -64,6 +63,9 @@ export class VettingDetailsComponent implements OnInit {
       JSON.stringify(candidate)
     )
 
+    // candidate sent to vetting-service, which emits it as new prediction subject
+    // vetting-results receives subject and initiates getResult method vi vetting-service
+    // vetting-details listens for any errors
     this.vet.makeNewPrediction(candidate)
     this.vet.newError.subscribe(error=>{
       this.error = error

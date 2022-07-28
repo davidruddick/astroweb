@@ -51,13 +51,13 @@ def flux_aperture(app_array, iflux_arr):
     return flux_val
 
 def tess_filenames(tic,
-                     #base_dir='D:/ExoplanetMLFiles/Alt_Exoplanet/TESSExoplanetData/Astronet-Vetting-master/Astronet-Vetting-master/astronet/tess',
+                     #base_dir='D:/Astronet-Vetting-master/Astronet-Vetting-master/astronet/tess',
                      #sector=43,
 					 base_dir,
-					 #sector,
                      injected=False,
                      inject_dir='/sector-43',
                      check_existence=True):
+                     
     """Returns the light curve filename for a TESS target star.
 
     Args:
@@ -78,12 +78,13 @@ def tess_filenames(tic,
     #tic = str(tic).rjust(16, '0')
 
     if not injected:
-        # modify this as needed
-        #bdir = os.path.join(base_dir, 'sector-' + str(sector)+'-tpfiles')
-        #base_name = "tess2021258175143-s00"+str(sector)+"-"+str(tic)+"-0214-s_tp.fits"
+
+        # bdir = os.path.join(base_dir, 'sector-' + str(sector)+'-tpfiles')
+        # base_name = "tess2021258175143-s00"+str(sector)+"-"+str(tic)+"-0214-s_tp.fits"
+
         base_name = "tess" + str(tic) + ".fits"
         filename = os.path.join(base_dir, base_name)
-        print(filename)
+
     else:
         filename = os.path.join(inject_dir, tic + '.fits')
 
@@ -106,34 +107,39 @@ def read_tess_light_curve(filename, flux_key='KSPMagnitude', invert=True):
       mag_small: Numpy array corresponding to magnitudes at each time step (aperture).
     """
     with fits.open(io.gfile.GFile(filename, mode="rb")) as hdu_list:
+
         #apgroup = hdu_list[2].data
         apgroup = hdu_list["APERTURE"].data
+
         #flux_array = hdu_list[1].data['FLUX']
         flux_array = hdu_list["LIGHTCURVE"].data['PDCSAP_FLUX']
-        api = define_aperture(apgroup, True, 0)
 
+        #time = np.array(hdu_list[1].data['TIME'])
+        time = np.array(hdu_list["LIGHTCURVE"].data['TIME'])
+
+        api = define_aperture(apgroup, True, 0)
         small_ap = 3
         big_ap = 5
-
         ap_small = define_aperture(apgroup, False, small_ap)
         ap_big = define_aperture(apgroup, False, big_ap)
-
         cad = flux_array.shape[0]
         mag = np.zeros(cad)
         mag_small = np.zeros(cad)
         mag_big = np.zeros(cad)
 
-        #time = np.array(hdu_list[1].data['TIME'])
-        time = np.array(hdu_list["LIGHTCURVE"].data['TIME'])
         for d in range(cad):
+
             #mag[d] = flux_aperture(api, flux_array[d,:,:])
-            #mag_small[d] = flux_aperture(ap_small, flux_array[d,:,:])
-            #mag_big[d] = flux_aperture(ap_big, flux_array[d,:,:])
             mag[d] = flux_aperture(api, flux_array[d])
+
+            #mag_small[d] = flux_aperture(ap_small, flux_array[d,:,:])
             mag_small[d] = flux_aperture(ap_small, flux_array[d])
+
+            #mag_big[d] = flux_aperture(ap_big, flux_array[d,:,:])
             mag_big[d] = flux_aperture(ap_big, flux_array[d])
 
         if 'QUALITY' in fits.getdata(filename, ext=1).columns.names:
+
             #quality_flag = np.where(np.array(hdu_list[1].data['QUALITY']) == 0)
             quality_flag = np.where(np.array(hdu_list["LIGHTCURVE"].data['QUALITY']) == 0)
 

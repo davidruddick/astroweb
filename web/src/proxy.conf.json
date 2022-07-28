@@ -1,0 +1,10 @@
+{
+  "/api/exoplanetarchive/*" : {
+    "target" : "https://exoplanetarchive.ipac.caltech.edu/TAP/sync",
+    "secure" : true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/exoplanetarchive": ""
+    }
+  }
+}

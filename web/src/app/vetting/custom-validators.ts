@@ -20,7 +20,6 @@ export function isZeroOrPositiveNumber(control: AbstractControl){
   return null
 }
 
-
 export function isPositiveNumber(control: AbstractControl){
   let value: string = control.value
   if(value.length == 0){
@@ -39,3 +38,4 @@ export function isPositiveInt(control: AbstractControl){
   }
   return null
 }
+

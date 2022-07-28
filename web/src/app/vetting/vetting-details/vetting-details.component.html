@@ -6,7 +6,8 @@
       <mat-label>Mission</mat-label>
       <mat-select formControlName="mission">
         <mat-option value="kepler">Kepler Primary</mat-option>
-        <mat-option value="tess">TESS Primary</mat-option>
+        <!--<mat-option value="k2">Kepler K2</mat-option>-->
+        <!--<mat-option value="tess">TESS</mat-option>-->
       </mat-select>
       <mat-error *ngIf="details.get('mission')?.hasError('required')">
         Please select a mission

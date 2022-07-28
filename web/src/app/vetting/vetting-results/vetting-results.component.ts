@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { catchError } from 'rxjs';
 import { Result } from '../result.model';
 import { VettingService } from '../vetting.service';
 
@@ -20,10 +19,10 @@ export class VettingResultsComponent implements OnInit {
 
   getConfidence(): string{
     if(this.result?.prediction){
-      if(parseFloat(this.result.prediction.slice(0, -1)) > 90){ // confident yes
+      if(parseFloat(this.result.prediction.slice(0, -1)) >= 90){ // confident yes
         return "good_prediction"
       }
-      if(parseFloat(this.result.prediction.slice(0, -1)) > 50){ // guessing
+      if(parseFloat(this.result.prediction.slice(0, -1)) > 55){ // above guessing
         return "medium_prediction"
       }
     }

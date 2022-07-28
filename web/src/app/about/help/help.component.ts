@@ -11,11 +11,11 @@ export class HelpComponent implements OnInit {
   input_cols = ["Key", "Description"]
   input_items = [
     {item: "Mission", description: "Which mission did you find the transit in? This determines the Astronet variant to be run"},
-    {item: "ID", description: "The KIC or TIC number of the star"},
+    {item: "ID", description: "The KIC (Kepler Input Catalogue) ID of the star"},
     {item: "Period", description: "The orbital period in days"},
     {item: "Duration", description: "How long does the transit event last in days?"},
-    {item: "Epoch Phase", description: "Optional. When does the first transit occur in the data?"},
-    {item: "Sector", description: "TESS only. This is required for downloading the correct dataset"}
+    {item: "Epoch Phase", description: "Optional. When does the first transit occur in the data?"}
+    //{item: "Sector", description: "TESS only. This is required for downloading the correct dataset"}
   ]
 
   example_cols = ["Key", "Description"]

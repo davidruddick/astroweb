@@ -1,8 +1,6 @@
 @import '~@angular/material/theming';
 @include mat-core();
 
-//@use '@angular/material' as mat;
-
 $space-primary: mat-palette($mat-indigo);
 $space-accent: mat-palette($mat-grey, A200, A100, A400);
 $space-warn: mat-palette($mat-red);
@@ -14,3 +12,6 @@ $space-theme: mat-dark-theme(
 );
 
 @include angular-material-theme($space-theme);
+
+
+

@@ -25,21 +25,17 @@ export class NavComponent {
     let img = document.getElementById("popup_image_large");
     let src = document.getElementById("popup_image_small")?.getAttribute("src")
     let caption = document.getElementById("popup_caption");
+    let message = "Artist's impression of the TRAPPIST-1 planetary system <br/> Credit: ESO/N. Bartmann/spaceengine.org"
 
     if(popup && img && src && caption){ // if elements exist
-
       if(display){
         img.setAttribute("src", src)
-        caption.innerHTML = "Artist’s impression of the TRAPPIST-1 planetary system <br/> Credit: ESO/N. Bartmann/spaceengine.org"
+        caption.innerHTML = message
         popup.style.display = "block";
-
       } else{
         popup.style.display = "none";
       }
-
-
     }
-
   }
 
 

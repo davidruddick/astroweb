@@ -3,7 +3,6 @@ import os, re, csv
 stars = []
 dir = os.path.join(os.getcwd(), "Astronet\\k2\\manifest")
 
-
 for file in os.listdir(dir):
     if file.endswith(".sha256"):
         text_file = open(os.path.join(dir, file))
@@ -16,7 +15,6 @@ for file in os.listdir(dir):
             stars.append(star)
 
 print(stars)
-
 
 with open(os.path.join(dir, 'manifest.csv'), 'w', newline='') as csv_file:
     writer = csv.writer(csv_file, delimiter=',')

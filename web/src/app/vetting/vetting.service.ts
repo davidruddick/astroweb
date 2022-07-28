@@ -1,10 +1,12 @@
 import { environment } from 'src/environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnChanges, SimpleChanges } from '@angular/core';
-import { catchError, concatMap, forkJoin, map, mergeMap, Observable, Subject, throwError } from 'rxjs';
+import { Injectable  } from '@angular/core';
+import { catchError, concatMap, forkJoin, map, Observable, Subject, throwError } from 'rxjs';
 import { Candidate } from './candidate.model';
 import { Planet } from './planet.model';
 import { Result } from './result.model'
+import { HttpHeaders } from '@angular/common/http';
+import { of } from 'rxjs';
 
 interface Star{
   name: string,
@@ -28,10 +30,10 @@ interface Prediction{
 })
 export class VettingService{
 
-
-  newPrediction = new Subject<Candidate>()
-  newError = new Subject<string>()
-  newStatus = new Subject<string>();
+  newPrediction = new Subject<Candidate>() // subscribed to in vetting-results
+  newError = new Subject<string>() // subscribed to in vetting-details
+  newStatus = new Subject<string>(); // subscribed to in vetting-results
+  debug = false;
 
   constructor(private http: HttpClient) { }
 
@@ -39,7 +41,7 @@ export class VettingService{
     this.newPrediction.next(candidate)
   }
 
-  publishError(error: string){ // broadcast the error to interested parties
+  publishError(error: string){
     this.newError.next(error)
   }
 
@@ -66,7 +68,7 @@ export class VettingService{
     return null
   }
 
-  get_unique_planets(arrays: any[], star_name: string){
+  get_unique_planets(arrays: any[], star_name: string): Planet[]{
     let planets: Planet[] = []
     for(var i=0; i<arrays.length; i++){
       let planet_letter = arrays[i]["pl_letter"]
@@ -104,6 +106,8 @@ export class VettingService{
       }
     }, 10000);
 
+    // forkjoin allows multiple requests to run in parallel
+    // final results from both are combined as new Result object.
     return forkJoin(this.getStarDetails(candidate), this.getPredictionFromAstronet(candidate)
     ).pipe(
       map((response: any)=>{
@@ -126,34 +130,51 @@ export class VettingService{
     )
   }
 
+  // HTTP request made to astronet server
+  // result returned as Prediction object
   getPredictionFromAstronet(candidate: Candidate): Observable<Prediction>{
-    return this.http.get<Prediction>('http://127.0.0.1:4201/',
-    {
-      params: {
-        mission: candidate.mission,
-        id: candidate.id,
-        period: candidate.period,
-        duration: candidate.duration,
-        t0: candidate.t0,
-        sector: candidate.sector
-      }
-    }
-    ).pipe(
-      map((response: any)=>{
-        return <Prediction>{
-          prediction: response.prediction,
-          image: response.image
+    if(!this.debug){
+      return this.http.get<Prediction>('http://127.0.0.1:4201',
+      {
+        params: {
+          mission: candidate.mission,
+          id: candidate.id,
+          period: candidate.period,
+          duration: candidate.duration,
+          t0: candidate.t0,
+          sector: candidate.sector
         }
-      }),
-      catchError(error=>{
-        this.publishError(error.error)
-        return throwError(() => new Error(error.error))
-      })
-    )
+      }
+      ).pipe(
+        map((response: any)=>{
+          console.log(response)
+          return <Prediction>{
+            prediction: response.prediction,
+            image: response.image
+          }
+        }),
+        catchError(error=>{
+          this.publishError("Astronet server unavailable. Please try again later.")
+          return throwError(() => new Error(error.error))
+        })
+      )
+    }
+    return of(<Prediction>{
+      prediction: "90%",
+      image: "../assets/images/test_result.png"
+    })
   }
 
+  // HTTP requests made to simbad and exoplanetarchive
+  // concatmap used to pass results of first request into second request
+  // final result returned as Star object
   getStarDetails(candidate: Candidate): Observable<Star>{
     let id = candidate.id
+
+    const headers = new HttpHeaders()
+    .set('content-type', 'application/json')
+    .set('Access-Control-Allow-Origin', '*');
+
     switch(candidate.mission){
       case "kepler":
         id = "kic" + id
@@ -183,7 +204,8 @@ export class VettingService{
                   JOIN basic AS star_basic ON star_basic.oid = star_extended.oidref
                   JOIN ident AS star ON star.oidref = star_basic.oid
                 WHERE star.id = '` + id + `'`
-      }
+      },
+
     }).pipe(
       map((response: any)=>{
         const result = response["data"]
@@ -198,10 +220,11 @@ export class VettingService{
             aliases: this.get_unique_values(result.map((column: string) => column[7]))
           }
       }),
-      concatMap((star: Star)=>{
+      concatMap((star: Star)=>{ // receive Star from first request. use gaia_id to initiate second request
         let gaia_id = this.get_gaia_id(star.aliases)
-        return this.http.get<Star>('https://exoplanetarchive.ipac.caltech.edu/TAP/sync',
+        return this.http.get<Star>('http://localhost:4200/api/exoplanetarchive',
         {
+          headers : headers,
           params: {
                   request: "doQuery",
                   lang: "adql",
@@ -219,7 +242,7 @@ export class VettingService{
       catchError(error=>{
         console.log(error)
         let message = ""
-        if(error.status == "400"){
+        if(error.status == "400" || error.status == "200"){
           message = "Error retrieving star information. Please confirm ID is correct."
         } else {
           message = environment.default_error
