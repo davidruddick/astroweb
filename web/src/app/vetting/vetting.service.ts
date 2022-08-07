@@ -154,6 +154,7 @@ export class VettingService{
           }
         }),
         catchError(error=>{
+          console.log(error)
           this.publishError("Astronet server unavailable. Please try again later.")
           return throwError(() => new Error(error.error))
         })
@@ -161,7 +162,7 @@ export class VettingService{
     }
     return of(<Prediction>{
       prediction: "90%",
-      image: "../assets/images/test_result.png"
+      image: "../images/test_result.png"
     })
   }
 

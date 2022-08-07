@@ -69,8 +69,9 @@ def build_command(mission, id, period, duration, t0, fits_dir, img_dir):
 
     # returns a literal powershell command to run astronet with the specified parameters
     # this requires python 3.7 to be installed and added to PATH
-    return "py -3.7 " + os.path.join(os.getcwd(), "Astronet", mission, "Astronet\\predict.py") + " " + " ".join('--{}={}'.format(k,v) for k,v in args.items()), img_dir.split("\\")[-1]
-            
+    command = "py -3.7 " + os.path.join(os.getcwd(), "Astronet", mission, "Astronet\\predict.py") + " " + " ".join('--{}={}'.format(k,v) for k,v in args.items()), img_dir.split("\\")[-1]
+    print(command)
+    return command        
 
 # execute final command in a subprocess
 # capture the STOUT and parse the prediction value
