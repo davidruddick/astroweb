@@ -181,7 +181,7 @@ export class VettingService{
         id = "kic" + id
         break;
       case "tess":
-        id + "tic" + id
+        id = "tic" + id
         break;
     }
     return this.http.get<Star>('http://simbad.u-strasbg.fr/simbad/sim-tap/sync',
@@ -206,7 +206,6 @@ export class VettingService{
                   JOIN ident AS star ON star.oidref = star_basic.oid
                 WHERE star.id = '` + id + `'`
       },
-
     }).pipe(
       map((response: any)=>{
         const result = response["data"]
